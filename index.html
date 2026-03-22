@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>BurgerBoy Gacha</title>
+    
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bbBlue: '#0b64db',
+                        bbDark: '#04172c',
+                        bbRed: '#e8362a',
+                        bbLight: '#cce0fc',
+                    },
+                    fontFamily: {
+                        draft: ['DraftABlack', 'Arial Black', 'sans-serif'],
+                        draftItalic: ['DraftABlackItalic', 'Arial Black', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Tipografías Custom - URLs actualizadas para servir directo desde GitHub */
+        @font-face {
+            font-family: 'DraftABlack';
+            /* Fallback: src: url('https://github.com/nsanchezBG/BBG/raw/main/DraftABlack.otf') format('opentype'); */
+            src: url('https://raw.githubusercontent.com/nsanchezBG/BBG/main/DraftABlack.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'DraftABlackItalic';
+            /* Fallback: src: url('https://github.com/nsanchezBG/BBG/raw/main/DraftABlackItalic.otf') format('opentype'); */
+            src: url('https://raw.githubusercontent.com/nsanchezBG/BBG/main/DraftABlackItalic.otf') format('opentype');
+            font-weight: normal;
+            font-style: italic;
+            font-display: swap;
+        }
+
+        /* Base Mobile Native - Cambiada fuente principal a Italic */
+        body {
+            font-family: 'DraftABlackItalic', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overscroll-behavior-y: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 430px;
+            height: 100dvh;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        .thick-border {
+            border: 3.5px solid #04172c;
+        }
+
+        /* Efecto de Brillo Blanco Duro Interno */
+        .hard-inner-glow {
+            --tw-ring-inset: inset;
+            --tw-ring-color: #ffffff;
+            --tw-ring-shadow: var(--tw-ring-inset) 2.5px 2.5px 0px 0px var(--tw-ring-color), var(--tw-ring-inset) -1.5px -1.5px 0px 0px rgba(255, 255, 255, 0.6);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+        }
+
+        .input-pill {
+            background-color: white;
+            border-radius: 9999px;
+            color: #0b64db;
+            text-align: center;
+            width: 100%;
+            padding: 0.6rem 1rem;
+            font-size: 1.1rem;
+            outline: none;
+            font-family: 'DraftABlackItalic', sans-serif;
+            text-transform: uppercase;
+        }
+        .input-pill::placeholder {
+            color: #b0cbf2;
+            font-family: 'DraftABlackItalic', sans-serif;
+            opacity: 1;
+        }
+
+        /* Scrollbar personalizado para los modales */
+        .modal-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        .modal-scroll::-webkit-scrollbar-thumb {
+            background: #b0cbf2; 
+            border-radius: 4px;
+        }
+
+        /* Gachaballs Background */
+        .gacha-bg {
+            position: absolute;
+            opacity: 0.12;
+            animation: floatLeftToRight linear infinite;
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+        }
+
+        @keyframes floatLeftToRight {
+            0% { transform: translateX(0) rotate(0deg); }
+            100% { transform: translateX(calc(100vw + 300px)) rotate(360deg); }
+        }
+
+        /* Animaciones Splashscreen: Entrada elástica (Warp) */
+        @keyframes warpIn {
+            0% { transform: scale(0.6) translateY(20px) rotate(-4deg); opacity: 0; filter: blur(4px); }
+            60% { transform: scale(1.05) translateY(-5px) rotate(2deg); opacity: 1; filter: blur(0px); }
+            100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; filter: blur(0px); }
+        }
+        
+        .animate-warp-iso {
+            animation: warpIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        .animate-warp-logo {
+            animation: warpIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards;
+            opacity: 0;
+        }
+
+        /* Animaciones Splashscreen: Tambaleo continuo (Idle Float) */
+        @keyframes floatIdle {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-8px) scale(1.025); }
+        }
+
+        .animate-idle {
+            animation: floatIdle 3.5s ease-in-out infinite;
+        }
+        .animate-idle-delayed {
+            animation: floatIdle 3.5s ease-in-out 1.2s infinite; /* Delay para desincronizarlos orgánicamente */
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useMemo } = React;
+
+        // URLs actualizadas a raw.githubusercontent.com
+        const ASSETS = {
+            /* Fallbacks:
+            isologo: "https://github.com/nsanchezBG/BBG/raw/main/isologo.png",
+            isoSimple: "https://github.com/nsanchezBG/BBG/raw/main/isosimple.png",
+            logoSimple: "https://github.com/nsanchezBG/BBG/raw/main/logosimple.png",
+            backIcon: "https://github.com/nsanchezBG/BBG/raw/main/backicon.png",
+            gachaball: "https://github.com/nsanchezBG/BBG/raw/main/gachaball.png",
+            loginIcon: "https://github.com/nsanchezBG/BBG/raw/main/loginicon.png",
+            */
+            isologo: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/isologo.png",
+            isoSimple: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/isosimple.png",
+            logoSimple: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/logosimple.png",
+            backIcon: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/backicon.png",
+            gachaball: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/gachaball.png",
+            loginIcon: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/loginicon.png",
+        };
+
+        const STATIC_BALLS = Array.from({ length: 15 }).map((_, i) => ({
+            id: i,
+            size: Math.random() * 45 + 35,
+            top: (i * (100 / 15)) + (Math.random() * 2), 
+            duration: Math.random() * 25 + 20,
+            delay: Math.random() * -45,
+        }));
+
+        const AnimatedBackground = React.memo(() => {
+            return (
+                <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+                    {STATIC_BALLS.map((ball) => (
+                        <img
+                            key={ball.id}
+                            src={ASSETS.gachaball}
+                            alt=""
+                            className="gacha-bg"
+                            style={{
+                                width: `${ball.size}px`,
+                                height: `${ball.size}px`,
+                                top: `${ball.top}%`,
+                                left: '-150px',
+                                animationDuration: `${ball.duration}s`,
+                                animationDelay: `${ball.delay}s`,
+                            }}
+                        />
+                    ))}
+                </div>
+            );
+        });
+
+        const InputField = ({ label, placeholder, type = "text", value, onChange }) => (
+            <div className="flex flex-col w-full mb-3.5 items-center px-4">
+                <label className="text-white text-lg tracking-wider mb-1 font-draftItalic">{label}</label>
+                <input
+                    type={type}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
+                    className="input-pill font-draftItalic"
+                />
+            </div>
+        );
+
+        const Checkbox = ({ checked, onChange, label }) => (
+            <div className="flex items-center gap-3 mb-4 cursor-pointer px-4" onClick={onChange}>
+                <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center shrink-0">
+                    {checked && <div className="w-3 h-3 rounded-full bg-bbBlue"></div>}
+                </div>
+                <div className="text-white text-[0.8rem] leading-tight font-draftItalic tracking-wide uppercase">
+                    {label}
+                </div>
+            </div>
+        );
+
+        const App = () => {
+            const [screen, setScreen] = useState('splash');
+            const [activeModal, setActiveModal] = useState(null);
+            const [formData, setFormData] = useState({
+                doc: '', pass: '', name: '', dni: '', phone: '', email: '', newPass: '', confirmPass: '',
+                tcAccepted: false, dataAccepted: false
+            });
+
+            const handleChange = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
+            const toggleCheck = (field) => setFormData(prev => ({ ...prev, [field]: !prev[field] }));
+
+            const handleLogin = () => setScreen('success');
+            const handleRegister = () => {
+                if (!formData.tcAccepted) return;
+                if (formData.newPass !== formData.confirmPass) return;
+                setScreen('success');
+            };
+
+            const passwordsMatch = formData.newPass === formData.confirmPass;
+            const showTooltip = !passwordsMatch && formData.confirmPass.length > 0;
+
+            // Transiciones del Isologo Combinado (Fusionando desde la posición del Splash)
+            const getIsologoStyle = () => {
+                switch(screen) {
+                    case 'splash': return { transform: 'translateY(22vh) scale(0.75)', opacity: 0, pointerEvents: 'none' };
+                    case 'home': return { transform: 'translateY(10vh) scale(1)', opacity: 1 };
+                    case 'login':
+                    case 'reg1':
+                    case 'reg2':
+                    case 'success': return { transform: 'translateY(2vh) scale(0.55)', opacity: 1 };
+                    default: return { transform: 'translateY(8vh) scale(1)', opacity: 0 };
+                }
+            };
+
+            return (
+                <div className="mobile-container flex flex-col items-center shadow-2xl">
+                    <AnimatedBackground />
+
+                    {/* Modal Flotante de Términos / Tratamiento de Datos */}
+                    <div className={`absolute inset-0 z-[60] flex items-center justify-center p-6 bg-[#04172c]/80 backdrop-blur-[2px] transition-opacity duration-300 ${activeModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                        <div className={`bg-white thick-border rounded-[2rem] w-full max-w-[340px] max-h-[75vh] flex flex-col items-center p-6 shadow-2xl transition-transform duration-300 ${activeModal ? 'scale-100 translate-y-0' : 'scale-90 translate-y-10'}`}>
+                            <h3 className="text-bbBlue text-[1.3rem] tracking-widest font-draftItalic text-center mb-4 leading-tight uppercase">
+                                {activeModal === 'terms' ? 'Términos y Condiciones' : 'Tratamiento de Datos'}
+                            </h3>
+                            
+                            <div className="modal-scroll overflow-y-auto w-full text-bbDark text-[0.85rem] font-sans font-medium text-justify mb-6 px-3 space-y-4">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                            </div>
+
+                            <button 
+                                onClick={() => setActiveModal(null)}
+                                className="bg-bbBlue text-white thick-border rounded-full py-2 px-10 text-[1.2rem] uppercase font-draftItalic tracking-wider active:scale-95 transition-transform"
+                            >
+                                CERRAR
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Botón de retroceso nativo */}
+                    {['login', 'reg1', 'reg2'].includes(screen) && (
+                        <button 
+                            onClick={() => {
+                                if(screen === 'reg2') setScreen('reg1');
+                                else setScreen('home');
+                            }}
+                            className="absolute top-6 left-5 z-50 p-2 active:scale-90 transition-transform"
+                        >
+                            <img src={ASSETS.backIcon} alt="Volver" className="w-8 h-auto object-contain" onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'block';
+                            }}/>
+                            <svg style={{display: 'none'}} className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#04172c" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                        </button>
+                    )}
+
+                    {/* Splash Screen Area (Efecto Morphing a Isologo en la transición a home) */}
+                    <div 
+                        className={`absolute inset-0 z-40 flex flex-col items-center justify-center cursor-pointer transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${screen === 'splash' ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-[0.55] -translate-y-[22vh] pointer-events-none'}`}
+                        onClick={() => screen === 'splash' && setScreen('home')}
+                    >
+                        <div className="flex flex-col items-center justify-center w-full -mt-8">
+                            {/* Iso (Máquina) - Envuelto en div para animación de tambaleo (idle) */}
+                            <div className="animate-idle flex justify-center w-full z-10">
+                                <img src={ASSETS.isoSimple} alt="Gacha Machine" className={`w-[52%] max-w-[190px] drop-shadow-lg ${screen === 'splash' ? 'animate-warp-iso' : ''}`} />
+                            </div>
+                            
+                            {/* Logo (Texto) - Espaciado visible y tambaleo desincronizado */}
+                            <div className="animate-idle-delayed flex justify-center w-full mt-5 z-20">
+                                <img src={ASSETS.logoSimple} alt="BurgerBoy Gacha" className={`w-[78%] max-w-[280px] drop-shadow-xl ${screen === 'splash' ? 'animate-warp-logo' : ''}`} />
+                            </div>
+                        </div>
+                        <div className={`absolute bottom-12 text-bbDark text-lg tracking-widest font-draftItalic transition-opacity duration-300 ${screen === 'splash' ? 'animate-pulse opacity-80' : 'opacity-0'}`}>TOCA PARA EMPEZAR</div>
+                    </div>
+
+                    {/* Isologo Combinado */}
+                    <div 
+                        className="absolute top-0 w-full flex justify-center z-30 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] origin-top pointer-events-none"
+                        style={getIsologoStyle()}
+                    >
+                        <img src={ASSETS.isologo} alt="BurgerBoy Gacha" className="w-[72%] max-w-[260px] drop-shadow-xl" />
+                    </div>
+
+                    {/* Pantalla HOME */}
+                    <div className={`absolute top-[52%] w-full flex flex-col items-center px-8 transition-all duration-500 z-20 ${screen === 'home' ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-10 pointer-events-none'}`}>
+                        
+                        {/* Botón Iniciar Sesión con Icono y Glow */}
+                        <button 
+                            onClick={() => setScreen('login')}
+                            className="bg-bbBlue thick-border hard-inner-glow rounded-[2.5rem] w-[130px] h-[155px] flex flex-col items-center justify-center active:scale-95 transition-transform shadow-lg"
+                        >
+                            <img src={ASSETS.loginIcon} alt="Login" className="w-[4.8rem] h-[4.8rem] mb-1.5 object-contain" />
+                            <span className="text-white text-[1.15rem] leading-tight text-center font-draftItalic tracking-wider">INICIAR<br/>SESIÓN</span>
+                        </button>
+
+                        <div className="text-bbBlue text-xl mt-5 mb-2 tracking-widest font-draftItalic">¿ERES NUEVO?</div>
+                        
+                        {/* Botón Registrate con Glow */}
+                        <button 
+                            onClick={() => setScreen('reg1')}
+                            className="bg-bbBlue text-white thick-border hard-inner-glow rounded-full w-[75%] py-2 text-2xl uppercase font-draftItalic tracking-wider active:scale-95 transition-transform shadow-lg"
+                        >
+                            REGÍSTRATE
+                        </button>
+
+                        <button 
+                            onClick={() => setActiveModal('terms')}
+                            className="mt-8 text-bbDark text-[0.75rem] tracking-widest font-draftItalic underline uppercase active:scale-95 transition-transform"
+                        >
+                            Términos y condiciones de uso
+                        </button>
+                    </div>
+
+                    {/* Contenedor Maestros Formularios (con Glow) */}
+                    <div className={`absolute top-[28%] w-[88%] max-w-[360px] bg-bbBlue thick-border hard-inner-glow rounded-[2rem] pb-8 pt-6 flex flex-col items-center transition-all duration-[700ms] ease-[cubic-bezier(0.25,1,0.5,1)] z-20 ${['login', 'reg1', 'reg2', 'success'].includes(screen) ? 'opacity-100 scale-100 translate-y-0 shadow-2xl' : 'opacity-0 scale-90 translate-y-16 pointer-events-none'}`}>
+                        
+                        {/* VIEW: LOGIN */}
+                        <div className={`w-full flex flex-col items-center transition-opacity duration-300 ${screen === 'login' ? 'opacity-100 relative' : 'opacity-0 absolute hidden'}`}>
+                            <InputField 
+                                label="USUARIO" placeholder="TU DOCUMENTO" 
+                                value={formData.doc} onChange={(e) => handleChange('doc', e.target.value)} 
+                            />
+                            <InputField 
+                                label="CONTRASEÑA" placeholder="*************" type="password"
+                                value={formData.pass} onChange={(e) => handleChange('pass', e.target.value)} 
+                            />
+                            
+                            <button onClick={handleLogin} className="bg-white text-bbDark uppercase text-2xl py-2 px-10 rounded-full font-draftItalic tracking-wider mt-4 active:scale-95 transition-transform">
+                                ENTRAR
+                            </button>
+                            
+                            <button onClick={() => alert("Simulación recuperación.")} className="mt-5 text-white text-[0.85rem] font-draftItalic tracking-wider underline uppercase">
+                                OLVIDÉ MI CONTRASEÑA
+                            </button>
+                        </div>
+
+                        {/* VIEW: REGISTRO 1 */}
+                        <div className={`w-full flex flex-col items-center transition-opacity duration-300 ${screen === 'reg1' ? 'opacity-100 relative' : 'opacity-0 absolute hidden'}`}>
+                            <InputField 
+                                label="NOMBRE COMPLETO" placeholder="TU DOCUMENTO" 
+                                value={formData.name} onChange={(e) => handleChange('name', e.target.value)} 
+                            />
+                            <InputField 
+                                label="DNI/CE" placeholder="*************" 
+                                value={formData.dni} onChange={(e) => handleChange('dni', e.target.value)} 
+                            />
+                            <InputField 
+                                label="TELÉFONO" placeholder="*************" type="tel"
+                                value={formData.phone} onChange={(e) => handleChange('phone', e.target.value)} 
+                            />
+                            <InputField 
+                                label="CORREO" placeholder="*************" type="email"
+                                value={formData.email} onChange={(e) => handleChange('email', e.target.value)} 
+                            />
+                            
+                            <button onClick={() => setScreen('reg2')} className="bg-white text-bbDark uppercase text-2xl py-1.5 px-8 rounded-full font-draftItalic tracking-wider mt-2 active:scale-95 transition-transform">
+                                SIGUIENTE
+                            </button>
+                        </div>
+
+                        {/* VIEW: REGISTRO 2 */}
+                        <div className={`w-full flex flex-col items-center transition-opacity duration-300 ${screen === 'reg2' ? 'opacity-100 relative' : 'opacity-0 absolute hidden'}`}>
+                            <InputField 
+                                label="CREA UNA CONTRASEÑA" placeholder="*************" type="password"
+                                value={formData.newPass} onChange={(e) => handleChange('newPass', e.target.value)} 
+                            />
+                            
+                            <div className="text-white text-[0.75rem] w-full px-12 mb-4 font-draftItalic leading-tight">
+                                <ul className="list-disc pl-2 space-y-0.5">
+                                    <li>Solo números y letras</li>
+                                    <li>Mínimo una mayúscula</li>
+                                    <li>Mínimo un número</li>
+                                    <li>Mín. 6 caracteres - máx. 12</li>
+                                </ul>
+                            </div>
+
+                            <div className="w-full relative px-4 flex flex-col items-center mb-2">
+                                <label className="text-white text-lg tracking-wider mb-1.5 font-draftItalic text-center">REPITE LA CONTRASEÑA</label>
+                                <input
+                                    type="password" placeholder="*************"
+                                    value={formData.confirmPass} onChange={(e) => handleChange('confirmPass', e.target.value)}
+                                    className={`input-pill font-draftItalic ${showTooltip ? 'text-bbRed' : 'text-bbBlue'}`}
+                                />
+                                <div className={`absolute top-full mt-[-2px] bg-bbRed text-white text-[0.8rem] px-4 py-1.5 rounded-b-xl font-draftItalic transition-all duration-300 z-10 whitespace-nowrap ${showTooltip ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
+                                    Las contraseñas no coinciden
+                                </div>
+                            </div>
+
+                            <div className="w-full px-6 mt-6">
+                                <Checkbox 
+                                    checked={formData.tcAccepted} 
+                                    onChange={() => toggleCheck('tcAccepted')}
+                                    label={<>Acepto los <a href="#" className="underline font-draftItalic" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActiveModal('terms'); }}>Términos y condiciones.</a></>}
+                                />
+                                <Checkbox 
+                                    checked={formData.dataAccepted} 
+                                    onChange={() => toggleCheck('dataAccepted')}
+                                    label={<>Acepto el <a href="#" className="underline font-draftItalic" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActiveModal('data'); }}>Tratamiento opcional de datos.</a></>}
+                                />
+                            </div>
+
+                            <button onClick={handleRegister} className={`bg-white text-bbDark uppercase text-[1.3rem] py-2 px-6 rounded-full font-draftItalic tracking-wider mt-2 active:scale-95 transition-transform ${!passwordsMatch && formData.confirmPass ? 'opacity-60' : ''}`}>
+                                REGISTRARME
+                            </button>
+                        </div>
+
+                        {/* VIEW: SUCCESS */}
+                        <div className={`w-full flex flex-col items-center justify-center py-4 transition-opacity duration-300 ${screen === 'success' ? 'opacity-100 relative' : 'opacity-0 absolute hidden'}`}>
+                            <div className="w-24 h-24 rounded-full border-[5px] border-white flex items-center justify-center mb-6 mt-4">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="w-14 h-14">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+
+                            <h2 className="text-white text-3xl mb-12 tracking-widest font-draftItalic">¡TODO LISTO!</h2>
+
+                            <button onClick={() => {
+                                setFormData(prev => ({...prev, pass: '', newPass: '', confirmPass: ''}));
+                                setScreen('login');
+                            }} className="bg-white text-bbDark uppercase text-[1.4rem] py-2 px-6 rounded-full font-draftItalic tracking-wider active:scale-95 transition-transform">
+                                INICIAR SESIÓN
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
