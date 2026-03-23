@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>BurgerBoy Gacha</title>
-
-        <!-- Favicons -->
+    
+    <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/nsanchezBG/BBG/main/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/nsanchezBG/BBG/main/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/nsanchezBG/BBG/main/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/nsanchezBG/BBG/main/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="192x192" href="https://raw.githubusercontent.com/nsanchezBG/BBG/main/android-chrome-192x192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="https://raw.githubusercontent.com/nsanchezBG/BBG/main/android-chrome-512x512.png">
-
-
+    
     <!-- React & ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -44,20 +43,20 @@
         }
     </script>
 
-   <style>
-        /* Tipografías Custom - ACTUALIZADAS a jsDelivr para máxima compatibilidad web móvil y evitar bloqueos CORS */
+    <style>
+        /* Tipografías Custom - URLs relativas al mismo directorio del index.html */
         @font-face {
             font-family: 'DraftABlack';
-            src: url('https://cdn.jsdelivr.net/gh/nsanchezBG/BBG@main/DraftABlack.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/nsanchezBG/BBG@main/DraftABlack.otf') format('opentype');
+            src: url('DraftABlack.woff2') format('woff2'),
+                 url('DraftABlack.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
         }
         @font-face {
             font-family: 'DraftABlackItalic';
-            src: url('https://cdn.jsdelivr.net/gh/nsanchezBG/BBG@main/DraftABlackItalic.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/nsanchezBG/BBG@main/DraftABlackItalic.otf') format('opentype');
+            src: url('DraftABlackItalic.woff2') format('woff2'),
+                 url('DraftABlackItalic.otf') format('opentype');
             font-weight: normal;
             font-style: italic;
             font-display: swap;
@@ -74,13 +73,15 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* Contenedor estricto para evitar desbordamientos en móvil */
         .mobile-container {
-            width: 100%;
+            width: 100vw;
             max-width: 430px;
             height: 100dvh;
             margin: 0 auto;
             position: relative;
             overflow: hidden;
+            overscroll-behavior: none;
             background-color: #ffffff;
         }
 
@@ -218,7 +219,7 @@
             backIcon: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/backicon.png",
             gachaball: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/gachaball.png",
             loginIcon: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/loginicon.png",
-            userLogo: "https://tofuu.getjusto.com/orioneat-prod/XnWYuHZkn4msS9FPL-logo-bb-07.png", // Nuevo Icono Usuario
+            userLogo: "https://tofuu.getjusto.com/orioneat-prod/XnWYuHZkn4msS9FPL-logo-bb-07.png",
             fondoEscaneo: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/fondoEscaneo.png",
             scanIcon: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/scanicon.png",
             destello: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/destello.png",
@@ -230,7 +231,8 @@
             premioBbcap: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/premiobbcap.png",
             premioBurger: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/premioburgergratis.png",
             premioMedias: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/premiomediasgratis.png",
-            premioSticker: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/premiosticake.png"
+            premioSticker: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/premiosticake.png",
+            premioNuevoMockup: "https://raw.githubusercontent.com/nsanchezBG/BBG/main/elnombredetunuevaimagen.png"
         };
 
         const PRIZES_DB = [
@@ -279,11 +281,11 @@
         const App = () => {
             const [screen, setScreen] = useState('splash'); 
             const [activeModal, setActiveModal] = useState(null);
-            const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); // Estado para el menú de usuario
+            const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); 
             const [formData, setFormData] = useState({ doc: '', pass: '', name: '', dni: '', phone: '', email: '', newPass: '', confirmPass: '', tcAccepted: false, dataAccepted: false });
             
             const [gachaResult, setGachaResult] = useState({ prize: null, title: '', code: '' });
-            const user = { name: "Cezochromo", bps: 6, document: "46870938" }; // Documento mock añadido
+            const user = { name: "Cezochromo", bps: 6, document: "46870938" }; 
 
             const handleChange = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
             const toggleCheck = (field) => setFormData(prev => ({ ...prev, [field]: !prev[field] }));
@@ -296,7 +298,7 @@
 
             const handleLogout = () => {
                 setIsUserMenuOpen(false);
-                setScreen('splash'); // Regresa al splash (se re-animará)
+                setScreen('splash'); 
             };
 
             const passwordsMatch = formData.newPass === formData.confirmPass;
@@ -362,7 +364,6 @@
 
             const showBackButton = ['login', 'reg1', 'reg2', 'scanMain', 'scanModal', 'scanVerifying', 'scanSuccess'].includes(screen);
             
-            // Logica del User Pill Global
             const hideUserPillScreens = ['splash', 'home', 'login', 'reg1', 'reg2', 'success'];
             const showUserPill = !hideUserPillScreens.includes(screen);
 
@@ -376,7 +377,6 @@
                             className={`bg-bbDark text-white medium-border flex flex-col items-center shadow-md transition-all duration-300 ease-out overflow-hidden cursor-pointer ${isUserMenuOpen ? 'rounded-[1.5rem] w-[220px] p-4' : 'rounded-full px-2.5 py-1'}`}
                             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                         >
-                            {/* Estado Colapsado (Pill Normal) */}
                             <div className={`flex items-center w-full justify-between transition-opacity duration-200 ${isUserMenuOpen ? 'opacity-0 h-0 hidden' : 'opacity-100'}`}>
                                 <div className="flex items-center">
                                     <div className="w-5 h-5 mr-1.5 bg-white rounded-full flex items-center justify-center p-[2px]">
@@ -390,7 +390,6 @@
                                 </div>
                             </div>
 
-                            {/* Estado Expandido (Menú Flotante) */}
                             <div className={`flex flex-col items-center w-full transition-opacity duration-300 delay-100 ${isUserMenuOpen ? 'opacity-100' : 'opacity-0 hidden'}`}>
                                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-2 p-1 overflow-hidden border-2 border-bbLight">
                                     <img src={ASSETS.userLogo} alt="User" className="w-full h-full object-contain" />
@@ -422,12 +421,10 @@
                         </div>
                     </div>
 
-                    {/* Capa invisible para cerrar el menu al tocar fuera */}
                     {isUserMenuOpen && (
                         <div className="absolute inset-0 z-[60]" onClick={() => setIsUserMenuOpen(false)}></div>
                     )}
 
-                    {/* Botón de retroceso nativo (Con Animación de Entrada) */}
                     {showBackButton && (
                         <button 
                             onClick={() => {
@@ -442,7 +439,6 @@
                         </button>
                     )}
 
-                    {/* Modal Legal de Términos / Tratamiento de Datos (Textos Realistas) */}
                     <div className={`absolute inset-0 z-[70] flex items-center justify-center p-6 bg-[#04172c]/80 backdrop-blur-[2px] transition-opacity duration-300 ${activeModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                         <div className={`bg-white thick-border rounded-[2rem] w-full max-w-[340px] max-h-[75vh] flex flex-col items-center p-6 shadow-2xl transition-transform duration-300 ${activeModal ? 'scale-100 translate-y-0' : 'scale-90 translate-y-10'}`}>
                             <h3 className="text-bbBlue text-[1.3rem] tracking-widest font-draftItalic text-center mb-4 leading-tight uppercase">
@@ -451,17 +447,17 @@
                             <div className="modal-scroll overflow-y-auto w-full text-bbDark text-[0.85rem] font-sans font-medium text-justify mb-6 px-3 space-y-4">
                                 {activeModal === 'terms' ? (
                                     <>
-                                        <p><strong>1. Aceptación de los Términos:</strong> Al acceder y utilizar la aplicación BurgerBoy Gacha, el usuario acepta estar sujeto a los presentes términos y condiciones de uso. Si no está de acuerdo con alguno de los términos, deberá abstenerse de usar el servicio.</p>
-                                        <p><strong>2. Mecánica de la Promoción:</strong> La dinámica consiste en escanear el código QR impreso en el comprobante de pago emitido en nuestros locales físicos. Cada escaneo válido otorgará Burger Points (BPs) que podrán ser utilizados en la máquina gachapón virtual.</p>
-                                        <p><strong>3. Vigencia y Premios:</strong> Los premios obtenidos a través de la aplicación están sujetos a disponibilidad de stock en el local donde se realice el canje. Los cupones y productos gratis tienen una vigencia de 30 días calendario desde su obtención.</p>
+                                        <p><strong>1. Aceptación de los Términos:</strong> Al acceder y utilizar la aplicación BurgerBoy Gacha, el usuario acepta estar sujeto a los presentes términos y condiciones de uso.</p>
+                                        <p><strong>2. Mecánica de la Promoción:</strong> La dinámica consiste en escanear el código QR impreso en el comprobante de pago emitido en nuestros locales físicos.</p>
+                                        <p><strong>3. Vigencia y Premios:</strong> Los premios obtenidos a través de la aplicación están sujetos a disponibilidad de stock en el local donde se realice el canje.</p>
                                         <p><strong>4. Modificaciones:</strong> BurgerBoy se reserva el derecho de modificar o cancelar esta promoción en cualquier momento, previa comunicación a través de nuestros canales oficiales.</p>
                                     </>
                                 ) : (
                                     <>
-                                        <p><strong>1. Finalidad del Tratamiento:</strong> Los datos personales recopilados (nombre, documento de identidad, correo electrónico y teléfono) serán utilizados exclusivamente para la gestión de su participación en el Gacha BurgerBoy, entrega de premios y envío de comunicaciones promocionales.</p>
-                                        <p><strong>2. Banco de Datos:</strong> La información será almacenada en el banco de datos de "Clientes" titularidad de BurgerBoy, cumpliendo con las normativas vigentes de Protección de Datos Personales.</p>
-                                        <p><strong>3. Ejercicio de Derechos:</strong> El usuario puede ejercer en cualquier momento sus derechos de acceso, rectificación, cancelación y oposición (ARCO) enviando una solicitud a nuestro correo de contacto oficial.</p>
-                                        <p><strong>4. Confidencialidad:</strong> Garantizamos la total confidencialidad y seguridad de sus datos, implementando las medidas técnicas y organizativas necesarias para evitar su alteración, pérdida o acceso no autorizado.</p>
+                                        <p><strong>1. Finalidad del Tratamiento:</strong> Los datos personales recopilados serán utilizados exclusivamente para la gestión de su participación en el Gacha BurgerBoy.</p>
+                                        <p><strong>2. Banco de Datos:</strong> La información será almacenada en el banco de datos de "Clientes" titularidad de BurgerBoy.</p>
+                                        <p><strong>3. Ejercicio de Derechos:</strong> El usuario puede ejercer en cualquier momento sus derechos de acceso, rectificación, cancelación y oposición (ARCO).</p>
+                                        <p><strong>4. Confidencialidad:</strong> Garantizamos la total confidencialidad y seguridad de sus datos.</p>
                                     </>
                                 )}
                             </div>
@@ -469,12 +465,10 @@
                         </div>
                     </div>
 
-                    {/* Flash Blanco Cegador */}
                     {screen === 'gachaReveal' && (
                         <div className="fixed inset-0 bg-white z-[100] animate-flash"></div>
                     )}
 
-                    {/* Splash Screen */}
                     <div className={`absolute inset-0 z-40 flex flex-col items-center justify-center cursor-pointer transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${screen === 'splash' ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-[0.55] -translate-y-[22vh] pointer-events-none'}`} onClick={() => screen === 'splash' && setScreen('home')}>
                         <div className="flex flex-col items-center justify-center w-full -mt-8">
                             <div className="animate-idle flex justify-center w-full z-10"><img src={ASSETS.isoSimple} className={`w-[52%] max-w-[190px] drop-shadow-lg ${screen === 'splash' ? 'animate-warp-iso' : ''}`} /></div>
@@ -483,11 +477,9 @@
                         <div className={`absolute bottom-12 text-bbDark text-lg tracking-widest font-draftItalic transition-opacity duration-300 ${screen === 'splash' ? 'animate-pulse opacity-80' : 'opacity-0'}`}>TOCA PARA EMPEZAR</div>
                     </div>
 
-                    {/* Logos Globales */}
                     <div className="absolute top-0 w-full flex justify-center z-30 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] origin-top pointer-events-none" style={getIsologoStyle()}><img src={ASSETS.isologo} className="w-[72%] max-w-[260px] drop-shadow-xl" /></div>
                     <div className="absolute top-0 w-full flex justify-center z-30 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] origin-top pointer-events-none" style={getLogoSimpleStyle()}><img src={ASSETS.logoSimple} className="w-[75%] max-w-[280px] drop-shadow-xl" /></div>
 
-                    {/* Pantalla HOME */}
                     <div className={`absolute top-[52%] w-full flex flex-col items-center px-8 transition-all duration-500 z-20 ${screen === 'home' ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-10 pointer-events-none'}`}>
                         <button onClick={() => setScreen('login')} className="bg-bbBlue thick-border hard-inner-glow rounded-[2.5rem] w-[130px] h-[155px] flex flex-col items-center justify-center active:scale-95 transition-transform shadow-lg">
                             <div className="mb-2">
@@ -499,7 +491,6 @@
                         <button onClick={() => setScreen('reg1')} className="bg-bbBlue text-white thick-border hard-inner-glow rounded-full w-[75%] py-2 text-2xl uppercase font-draftItalic tracking-wider active:scale-95 transition-transform shadow-lg">REGÍSTRATE</button>
                     </div>
 
-                    {/* ---------------- PANTALLA: MENU PRINCIPAL & TRANSICIONES ZOOM ---------------- */}
                     <div className={`absolute inset-0 pt-[20vh] pb-[6vh] w-full flex flex-col items-center justify-end transition-all duration-[700ms] ease-[cubic-bezier(0.25,1,0.5,1)] z-20 ${['mainMenu', 'scanTransition', 'gachaTransition'].includes(screen) ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'} ${screen === 'gachaExit' ? 'scale-50 opacity-0 duration-300' : ''}`}>
                         <div className={`relative flex justify-center items-center w-[60%] max-w-[250px] mt-auto mb-[7vh] z-10 origin-bottom ${['scanTransition', 'scanMain', 'scanModal', 'scanVerifying', 'scanSuccess'].includes(screen) ? 'animate-zoom-machine' : ['gachaTransition', 'gachaWait', 'gachaFalling', 'gachaShake', 'gachaReveal', 'gachaPrizeFinal', 'gachaExit'].includes(screen) ? 'animate-gacha-zoom' : 'animate-subtle'}`}>
                             
@@ -529,12 +520,10 @@
                         </button>
                     </div>
 
-                    {/* ---------------- PANTALLA BASE ESCANEO ---------------- */}
                     <div className={`absolute inset-0 z-30 flex items-center justify-center bg-[#eef5fd] transition-opacity duration-500 ${['scanMain', 'scanModal', 'scanVerifying', 'scanSuccess'].includes(screen) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                         <img src={ASSETS.fondoEscaneo} className="absolute inset-0 w-full h-full object-cover object-center cursor-pointer" onClick={() => setScreen('scanModal')} />
                     </div>
 
-                    {/* ---------------- MODAL MAESTRO ESCANEO ---------------- */}
                     <div className={`absolute inset-0 z-50 flex items-center justify-center p-6 bg-[#04172c]/80 backdrop-blur-sm transition-opacity duration-500 ${['scanModal', 'scanVerifying', 'scanSuccess'].includes(screen) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => { if(screen === 'scanSuccess') setScreen('mainMenu'); }}>
                         <div className={`bg-white thick-border rounded-[2.5rem] w-full max-w-[340px] flex flex-col items-center shadow-2xl relative transition-all duration-[600ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] overflow-visible ${screen === 'scanModal' ? 'h-[500px] p-8' : screen === 'scanVerifying' ? 'h-[260px] p-10' : 'h-[320px] p-10 justify-center'}`} onClick={(e) => { if(screen !== 'scanSuccess') e.stopPropagation(); }}>
                             
@@ -563,7 +552,6 @@
                         </div>
                     </div>
 
-                    {/* ---------------- PANTALLA GACHA (Fondo y Bola cayendo) ---------------- */}
                     <div className={`absolute inset-0 z-30 bg-[#f4f7fb] flex justify-center items-center transition-opacity duration-500 overflow-hidden ${['gachaWait', 'gachaFalling'].includes(screen) ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                         <img src={ASSETS.fondoGacha} className="absolute inset-0 w-full h-full object-cover object-center" />
                         
@@ -579,26 +567,21 @@
                         </div>
                     </div>
 
-                    {/* ---------------- PANTALLA GACHA REVEAL & RESULTADO FINAL ---------------- */}
                     <div className={`absolute inset-0 z-40 transition-all duration-700 pointer-events-none ${['gachaShake', 'gachaReveal', 'gachaPrizeFinal'].includes(screen) ? 'opacity-100' : 'opacity-0'}`}>
                         
-                        {/* Contenedor MAESTRO del Premio (Centrado Absoluto en Pantalla) */}
                         <div className={`absolute aspect-square flex items-center justify-center z-40 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${
                             ['gachaShake', 'gachaReveal'].includes(screen) ? 'top-[50vh] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px]' : 
                             screen === 'gachaPrizeFinal' ? 'top-[34vh] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[45%] max-w-[190px] prize-float-result' : 
                             'top-[50vh] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[320px] opacity-0'
                         }`}>
                             
-                            {/* Bola Temblando (Perfectamente estable en su centro) */}
                             <div className="w-[88%] h-[88%] relative">
                                 <img src={ASSETS.gachaball} className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-200 ${screen === 'gachaShake' ? 'opacity-100 animate-violent-shake' : 'opacity-0'}`} />
                             </div>
 
-                            {/* Premio ajustado en tamaño */}
                             <img src={gachaResult.prize?.img} className={`absolute w-[110%] h-[110%] object-contain drop-shadow-2xl z-30 transition-all duration-500 ${['gachaReveal', 'gachaPrizeFinal'].includes(screen) ? 'opacity-100 animate-pop-prize' : 'opacity-0 scale-0'}`} />
                         </div>
 
-                        {/* Textos y Botones Finales (Posiciones relativas precisas en VH) */}
                         <div className={`absolute inset-0 z-30 transition-opacity duration-500 ${screen === 'gachaPrizeFinal' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
                             
                             <h1 className="absolute top-[10vh] w-full px-4 text-bbDark text-[3.2rem] leading-[0.9] tracking-tighter font-draftItalic text-center drop-shadow-md animate-slide-up delay-100">
@@ -628,7 +611,6 @@
                         </div>
                     </div>
 
-                    {/* ---------------- MODAL / PANTALLA: MIS CANJES ---------------- */}
                     <div className={`absolute top-[25vh] w-[90%] max-w-[380px] h-[66vh] max-h-[600px] flex flex-col items-center transition-all duration-[700ms] ease-[cubic-bezier(0.25,1,0.5,1)] z-40 ${screen === 'misCanjes' ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-16 pointer-events-none'}`}>
                         <div className="w-full h-full bg-bbBlue thick-border hard-inner-glow rounded-[2rem] flex flex-col items-center pt-6 pb-4 shadow-2xl relative mb-4">
                             <h2 className="text-white text-2xl tracking-widest font-draftItalic mb-4">MIS CANJES</h2>
@@ -643,7 +625,6 @@
                                     </div>
                                 </div>
 
-                                {/* PREMIO 2 GRIS */}
                                 <div className="bg-white rounded-[1.5rem] w-full p-3 flex items-center shadow-md opacity-50 grayscale">
                                     <div className="w-16 h-16 shrink-0 flex items-center justify-center mr-3"><img src={ASSETS.premioSticker} className="max-w-full max-h-full object-contain" /></div>
                                     <div className="flex flex-col justify-center overflow-hidden">
@@ -654,7 +635,6 @@
                                     </div>
                                 </div>
 
-                                {/* PREMIO 3 GRIS */}
                                 <div className="bg-white rounded-[1.5rem] w-full p-3 flex items-center shadow-md opacity-50 grayscale">
                                     <div className="w-16 h-16 shrink-0 flex items-center justify-center mr-3"><img src={ASSETS.premio5off} className="max-w-full max-h-full object-contain" /></div>
                                     <div className="flex flex-col justify-center overflow-hidden">
@@ -669,7 +649,6 @@
                         <button onClick={() => setScreen('mainMenu')} className="bg-bbBlue text-white thick-border hard-inner-glow rounded-full w-[80%] max-w-[280px] py-2 text-2xl uppercase font-draftItalic tracking-wider active:scale-95 transition-transform shadow-xl shrink-0">CERRAR</button>
                     </div>
 
-                    {/* Vistas de Login / Reg */}
                     <div className={`absolute top-[28%] w-[88%] max-w-[360px] bg-bbBlue thick-border hard-inner-glow rounded-[2rem] pb-8 pt-6 flex flex-col items-center transition-all duration-[700ms] ease-[cubic-bezier(0.25,1,0.5,1)] z-20 ${['login', 'reg1', 'reg2', 'success'].includes(screen) ? 'opacity-100 scale-100 translate-y-0 shadow-2xl' : 'opacity-0 scale-90 translate-y-16 pointer-events-none'}`}>
                         <div className={`w-full flex flex-col items-center transition-opacity duration-300 ${screen === 'login' ? 'opacity-100 relative' : 'opacity-0 absolute hidden'}`}>
                             <InputField label="USUARIO" placeholder="TU DOCUMENTO" value={formData.doc} onChange={(e) => handleChange('doc', e.target.value)} />
